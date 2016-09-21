@@ -1,0 +1,6 @@
+<div class="task" ng-class="{selected: task.checked}" >
+    <input type="checkbox" class="tickbox" ng-model="task.checked"/>
+    <div ng-transclude class="title">
+    </div>
+    <input type="button" class="removebutton" value="remove" ng-show="task.checked" ng-click="tasks.removeTask(task)"/>
+</div>

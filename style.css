@@ -1,0 +1,20 @@
+
+.tickbox {
+    float: left;
+}
+
+.task {
+    clear: left;
+}
+
+.title {
+    float: left;
+}
+
+.removebutton {
+    float: left;
+}
+
+.selected {
+    color: #aaaaaa;
+}

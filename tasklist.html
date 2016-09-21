@@ -1,0 +1,7 @@
+<div class="tasklist">
+    <input type="text" value="new task" ng-model="tasks.temptask" />
+    <input type="button" value="add task" ng-click="tasks.addTask(tasks.temptask)" />
+    <task ng-repeat="task in tasks.tasks track by $index">
+        {{task.name}}
+    </task>
+</div>
