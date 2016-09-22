@@ -4,7 +4,47 @@
         var parts = value.split("; " + name + "=");
         if (parts.length == 2) return parts.pop().split(";").shift();
     }
-    angular.module('app', [])
+    angular.module('app', ['ngRoute'])
+    .factory('googleAuth', function() {
+        return function() {
+            return {
+                onSignIn: function onSignIn(googleUser) {
+                   // Useful data for your client-side scripts:
+                   var profile = googleUser.getBasicProfile();
+                   console.log("ID: " + profile.getId()); // Don't send this directly to your server!
+                   console.log('Full Name: ' + profile.getName());
+                   console.log('Given Name: ' + profile.getGivenName());
+                   console.log('Family Name: ' + profile.getFamilyName());
+                   console.log("Image URL: " + profile.getImageUrl());
+                   console.log("Email: " + profile.getEmail());
+
+                   // The ID token you need to pass to your backend:
+                   var id_token = googleUser.getAuthResponse().id_token;
+                   console.log("ID Token: " + id_token);
+                 }
+            }
+        }
+    })
+    .config(function($routeProvider) {
+        $routeProvider.when('/', {
+            templateUrl: 'login.html',
+            controller: 'LoginController',
+            controllerAs: 'login'
+        })
+        .when('/tasks', {
+            templateUrl: 'main.html'
+        })
+    })
+    .controller('LoginController', function($scope, $location, googleAuth) {
+        var self = this;
+        self.login = function() {
+            $location.path('/tasks');
+        }
+        self.onSignIn = googleAuth.onSignIn;
+        window.onSignIn = function(googleUser) {
+            alert('ahhh');
+        };
+    })
     .controller('TaskController', function($scope) {
         var self = this;
         self.tasks = [
@@ -56,6 +96,20 @@
             transclude: 'true',
             require: '^tasklist',
             templateUrl: 'task.html'
+        };
+    })
+    .directive('googlelogin', function() {
+        return {
+            restrict: 'E',
+            template: '<div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>',
+            link: function(scope, element) {
+                var script = angular.element('<script/>');
+                script.attr({
+                    src: 'https://apis.google.com/js/platform.js',
+                    type: 'text/javascript'
+                });
+                element.append(script);
+            }
         };
     })
 })(window);
